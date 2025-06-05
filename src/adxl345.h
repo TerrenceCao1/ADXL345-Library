@@ -15,7 +15,7 @@ We need functions to:
 #define POWER_CTL 0x2D      //power control address (for waking up sensor)
 #define DATA_FORMAT 0x31    //data format address (for setting range of data)
 
-void sensorInit(); //initate sensor communication 
+bool sensorInit(); //initate sensor communication 
     //load the sensor ID (check this to make sure we have connection)
 
 
@@ -25,5 +25,6 @@ void setParams(uint8_t range);
             //2g -> value of 00, 4g -> 01, 8g -> 10, 16g -> 11
         //Make the sensor wakeup 0x08 -> 0x2D register
 
+void writeRegister(uint8_t reg, uint8_t value);
 
 #endif
