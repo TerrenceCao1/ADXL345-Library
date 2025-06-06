@@ -2,17 +2,13 @@
 #include <adxl345.h>
 #include <Wire.h>
 
-ADXL345_Handle accel;
 
 void setup() {
     Serial.begin(9600);
+    Wire.begin();
+    checkForSensor();
 }
 
 void loop() {
     delay(1000);
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
 }

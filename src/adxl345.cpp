@@ -11,6 +11,7 @@
 */
 bool checkForSensor()
 {
+    Serial.println(readRegister(0x00), HEX);
     return 0;
 }
 
@@ -40,4 +41,25 @@ void writeRegister(uint8_t reg, uint8_t value)
     Wire.write(reg);
     Wire.write(value);
     Wire.endTransmission();
+}
+
+/*
+    Function readRegister -> read a value from a register in the sensor
+    Input: 
+        reg: register we wanna read from
+    Output: 
+        byte inside of that register
+*/
+uint8_t readRegister(uint8_t reg)
+{
+    //to read from register we must first send slave address, then register we want to access
+    Wire.beginTransmission(I2C_ADDRESS);
+    Wire.write(reg);
+    Wire.endTransmission();
+
+    //then we send the slave address (with a read bit), then read the data
+    //contains both beginTransmission, and endTransmission for the reading part
+    Wire.requestFrom(I2C_ADDRESS, 1);
+    uint8_t result = Wire.read();
+    return result;
 }
