@@ -11,8 +11,16 @@
 */
 bool checkForSensor()
 {
-    Serial.println(readRegister(0x00), HEX);
-    return 0;
+    uint8_t checkRegister = readRegister(DEVID_ADDRESS);
+
+    if (checkRegister == DEVID_VALUE)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 /*
