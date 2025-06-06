@@ -1,15 +1,15 @@
 #include <Arduino.h>
+#include <adxl345.h>
+#include <Wire.h>
 
-// put function declarations here:
-int myFunction(int, int);
+ADXL345_Handle accel;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    delay(1000);
 }
 
 // put function definitions here:

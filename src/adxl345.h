@@ -15,19 +15,9 @@ We need functions to:
 #define POWER_CTL 0x2D      //power control address (for waking up sensor)
 #define DATA_FORMAT 0x31    //data format address (for setting range of data)
 
-typedef struct
-{
-    uint8_t sensor_address;
-    TwoWire *i2cPort;
-} ADXL345_Handle;
 
-
-
-bool sensorInit(ADXL345_Handle *handle, uint8_t i2cAddress, TwoWire *wirePort); //initate sensor communication 
-    //load the sensor ID (check this to make sure we have connection)
-    //if we get the correct sensor ID, return 0
-    //else, return 1, and print error message
-
+bool checkForSensor();
+void turnOnSensor();
 
 void setParams(uint8_t range);
     //Store sensor settings into registers

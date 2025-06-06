@@ -4,14 +4,40 @@
 
 #define DEVID_VALUE 0xE5
 
-
-
-bool sensorInit(ADXL345_Handle *handle, uint8_t i2cAddress, TwoWire *wirePort) //initate sensor communication 
+/*
+    Function: checkForSensor -> read the DEVID register from the sensor, check that it's the right sensor, then proceed with communicating
+    Input: void
+    Output: 0 if successful, 1 if unsuccessful
+*/
+bool checkForSensor()
 {
-    handle->sensor_address = i2cAddress;
-    handle->i2cPort = wirePort;
-    handle->i2cPort->begin();
+    return 0;
+}
 
-    //read the device ID then check if it's DEVID_VALUE
-    //return 0 if successful, 1 if unsuccessful. 
+/*
+    Function: turnOn -> turn the sensor on, begin the I2C communication, wake the sensor by writing to POWER_CTL register
+    Input: void
+    Output: i2c communications get turned on :)
+*/
+void turnOn()
+{
+    Wire.begin(); //begin I2C comms
+    //wake the sensor
+        //write to POWER_CTL register (turn on measure, autosleep, wakeups)
+
+}
+
+/*
+    Function: writeRegister -> write a value to a register in the sensor
+    Input:
+        reg: register on the device we want to write to
+        value: what we want to write to the 
+    Output: void, sensor gets registers changed
+*/
+void writeRegister(uint8_t reg, uint8_t value)
+{
+    Wire.beginTransmission(DEVID_ADDRESS); //writes start bit and device address
+    Wire.write(reg);
+    Wire.write(value);
+    Wire.endTransmission();
 }
