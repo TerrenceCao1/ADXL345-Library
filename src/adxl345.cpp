@@ -15,10 +15,12 @@ bool checkForSensor()
 
     if (checkRegister == DEVID_VALUE)
     {
+        Serial.println("Sensor Detected!");
         return 0;
     }
     else
     {
+        Serial.println("Yo this jit (ADXL345) isn't connected buddy.");
         return 1;
     }
 }
@@ -33,7 +35,13 @@ void turnOn()
     Wire.begin(); //begin I2C comms
     //wake the sensor
         //write to POWER_CTL register (turn on measure, autosleep, wakeups)
-
+    writeRegister(POWER_CTL, 0b00011000);
+    uint8_t powerReg = readRegister(POWER_CTL);
+    Serial.println(powerReg);
+    if (powerReg == 0x18)
+    {
+        Serial.println("Sensor on!");
+    }
 }
 
 /*
@@ -45,7 +53,7 @@ void turnOn()
 */
 void writeRegister(uint8_t reg, uint8_t value)
 {
-    Wire.beginTransmission(DEVID_ADDRESS); //writes start bit and device address
+    Wire.beginTransmission(I2C_ADDRESS); //writes start bit and device address
     Wire.write(reg);
     Wire.write(value);
     Wire.endTransmission();

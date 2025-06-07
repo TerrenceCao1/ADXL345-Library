@@ -17,7 +17,7 @@ We need functions to:
 
 
 bool checkForSensor();
-void turnOnSensor();
+void turnOn();
 
 void setParams(uint8_t range);
     //Store sensor settings into registers

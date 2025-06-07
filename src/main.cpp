@@ -6,10 +6,12 @@
 void setup() {
     Serial.begin(9600);
     Wire.begin();
+
     if(checkForSensor() == 1)
     {
         while(1);
     }
+    turnOn();
 }
 
 void loop() {
