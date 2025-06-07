@@ -16,12 +16,12 @@ bool checkForSensor()
     if (checkRegister == DEVID_VALUE)
     {
         Serial.println("Sensor Detected!");
-        return 0;
+        return 1;
     }
     else
     {
         Serial.println("Yo this jit (ADXL345) isn't connected buddy.");
-        return 1;
+        return 0;
     }
 }
 
@@ -79,6 +79,23 @@ uint8_t readRegister(uint8_t reg)
     uint8_t result = Wire.read();
     return result;
 }
+
+/*
+    Function: getAccel -> gets acceleration data from sensor registers and stores it into buffer
+    Input: 
+        void
+    Output: 
+        Acceleration data gets but into a buffer array
+*/
+void getAccel(uint8_t accelArray[]) //accelArray is length 6
+{
+    for (int i = 0; i < 6; i++)
+    {
+        uint8_t buf = readRegister(0x32 + i);
+        accelArray[i] = buf;
+    }
+}
+
 
 /*
     Function setParams -> sets the settings for the sensor (and settings for interpreting data)
