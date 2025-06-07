@@ -96,7 +96,6 @@ void getAccel(uint8_t accelArray[]) //accelArray is length 6
     }
 }
 
-
 /*
     Function setParams -> sets the settings for the sensor (and settings for interpreting data)
     Input:

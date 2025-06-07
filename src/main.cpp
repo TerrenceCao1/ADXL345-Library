@@ -20,6 +20,5 @@ void loop() {
     uint8_t accelArray[6];
     getAccel(accelArray);
 
-    
-    delay(1000);
+    delay(100);
 }
