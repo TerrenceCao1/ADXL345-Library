@@ -19,15 +19,13 @@ We need functions to:
 bool checkForSensor();
 void turnOn();
 
-void setParams(uint8_t range);
-    //Store sensor settings into registers
-        //Range is D1 and D0 of 0x31 register:
-            //2g -> value of 00, 4g -> 01, 8g -> 10, 16g -> 11
-        //Make the sensor wakeup 0x08 -> 0x2D register
+void setParams(int val);
 
 void writeRegister(uint8_t reg, uint8_t value);
 
 uint8_t readRegister(uint8_t reg);
+
+void getAccel();
 
 
 #endif

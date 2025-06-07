@@ -79,3 +79,38 @@ uint8_t readRegister(uint8_t reg)
     uint8_t result = Wire.read();
     return result;
 }
+
+/*
+    Function setParams -> sets the settings for the sensor (and settings for interpreting data)
+    Input:
+        range: the range of the accelerometer (2g, 4, 8, or 16g)
+    Output:
+        void
+*/
+void setParams(int val)
+{
+    //function automatically sets I2C settings for the other bits 
+    uint8_t byteToWrite = 0x08; //00001000, only Full Resolution bit on
+    uint8_t rangeByte = 0x00;
+    
+    //ugly switch statement change later you bum
+    switch (val)
+    {
+        case 2:
+            rangeByte = 0x00;
+            break;
+        case 4:
+            rangeByte = 0x01;
+            break; 
+        case 8:
+            rangeByte = 0x02;
+            break;
+        case 16:
+            rangeByte = 0x03;
+            break;
+        default:
+            rangeByte = 0x00;
+    }
+    byteToWrite |= rangeByte;
+    writeRegister(DATA_FORMAT, byteToWrite);
+}
