@@ -85,7 +85,7 @@ uint8_t readRegister(uint8_t reg)
     Input: 
         void
     Output: 
-        Acceleration data gets but into a buffer array
+        Output's array 3 big of uint16_t's (arr[0] = x accel, arr[1] = y accel, arr[2] = z accel)
 */
 void getAccel(uint8_t accelArray[]) //accelArray is length 6
 {
@@ -94,6 +94,18 @@ void getAccel(uint8_t accelArray[]) //accelArray is length 6
         uint8_t buf = readRegister(0x32 + i);
         accelArray[i] = buf;
     }
+    uint16_t xAccel = 0x0000;
+    uint16_t yAccel = 0x0000;
+    uint16_t zAccel = 0x0000;
+
+    xAccel |= (accelArray[0]);
+    xAccel |= (accelArray[1] << 8);
+    yAccel |= (accelArray[2]);
+    yAccel |= (accelArray[3] << 8);
+    zAccel |= (accelArray[4]);
+    zAccel |= (accelArray[5] << 8);
+
+    //TODO Put those values in an array and output it
 }
 
 /*
