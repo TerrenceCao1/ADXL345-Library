@@ -94,9 +94,10 @@ void getAccel(uint8_t accelArray[]) //accelArray is length 6
         uint8_t buf = readRegister(0x32 + i);
         accelArray[i] = buf;
     }
-    uint16_t xAccel = 0x0000;
-    uint16_t yAccel = 0x0000;
-    uint16_t zAccel = 0x0000;
+    //UNTESTED MAKE SURE THIS WORKS BRUH
+    int16_t xAccel = 0x0000;
+    int16_t yAccel = 0x0000;
+    int16_t zAccel = 0x0000;
 
     xAccel |= (accelArray[0]);
     xAccel |= (accelArray[1] << 8);
@@ -106,6 +107,9 @@ void getAccel(uint8_t accelArray[]) //accelArray is length 6
     zAccel |= (accelArray[5] << 8);
 
     //TODO Put those values in an array and output it
+    Serial.print("xAccel: "); Serial.print(xAccel, DEC); 
+    Serial.print(" yAccel: "); Serial.print(yAccel, DEC);
+    Serial.print(" zAccel: "); Serial.println(zAccel, DEC);
 }
 
 /*

@@ -7,7 +7,7 @@ void setup() {
     Serial.begin(9600);
     Wire.begin();
 
-    if(checkForSensor())
+    if(!checkForSensor())
     {
         while(1);
     }
@@ -20,5 +20,5 @@ void loop() {
     uint8_t accelArray[6];
     getAccel(accelArray);
 
-    delay(100);
+    delay(1000);
 }
