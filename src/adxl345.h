@@ -25,5 +25,8 @@ void writeRegister(uint8_t reg, uint8_t value);
 
 uint8_t readRegister(uint8_t reg);
 
-void getAccel(uint8_t accelArray[]);
+void getAccel(int16_t accelArray[]);
+
+void calibrate(void);
+
 #endif

@@ -87,29 +87,29 @@ uint8_t readRegister(uint8_t reg)
     Output: 
         Output's array 3 big of uint16_t's (arr[0] = x accel, arr[1] = y accel, arr[2] = z accel)
 */
-void getAccel(uint8_t accelArray[]) //accelArray is length 6
+void getAccel(int16_t accelArray[]) //accelArray is length 3
 {
+    int8_t rawData[6];
     for (int i = 0; i < 6; i++)
     {
-        uint8_t buf = readRegister(0x32 + i);
-        accelArray[i] = buf;
+        int8_t buf = readRegister(0x32 + i);
+        rawData[i] = buf;
     }
     //UNTESTED MAKE SURE THIS WORKS BRUH
     int16_t xAccel = 0x0000;
     int16_t yAccel = 0x0000;
     int16_t zAccel = 0x0000;
 
-    xAccel |= (accelArray[0]);
-    xAccel |= (accelArray[1] << 8);
-    yAccel |= (accelArray[2]);
-    yAccel |= (accelArray[3] << 8);
-    zAccel |= (accelArray[4]);
-    zAccel |= (accelArray[5] << 8);
+    xAccel |= (rawData[0]);
+    xAccel |= (rawData[1] << 8);
+    yAccel |= (rawData[2]);
+    yAccel |= (rawData[3] << 8);
+    zAccel |= (rawData[4]);
+    zAccel |= (rawData[5] << 8);
 
-    //TODO Put those values in an array and output it
-    Serial.print("xAccel: "); Serial.print(xAccel, DEC); 
-    Serial.print(" yAccel: "); Serial.print(yAccel, DEC);
-    Serial.print(" zAccel: "); Serial.println(zAccel, DEC);
+    accelArray[0] = xAccel;
+    accelArray[1] = yAccel;
+    accelArray[2] = zAccel;
 }
 
 /*
@@ -145,4 +145,28 @@ void setParams(int val)
     }
     byteToWrite |= rangeByte;
     writeRegister(DATA_FORMAT, byteToWrite);
+}
+
+/*
+    Function: Calibrate - find the offsets of the accelerometer and calibrate it
+    Input: void
+    Output: void
+*/
+void calibrate(void)
+{
+    int avgXAccel = 0; 
+    int avgYAccel = 0; 
+    int avgZAccel = 0;
+
+    int16_t calibrationValues[3];
+    for (int i = 0; i < 100; i++)
+    {
+        getAccel(calibrationValues);
+        avgXAccel += calibrationValues[0];
+        avgYAccel += calibrationValues[1];
+        avgZAccel += calibrationValues[2];
+    }
+    avgXAccel /= 100.;
+    avgYAccel /= 100.;
+    avgZAccel /= 100.;
 }

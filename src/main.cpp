@@ -17,7 +17,7 @@ void setup() {
 }
 
 void loop() {
-    uint8_t accelArray[6];
+    int16_t accelArray[3];
     getAccel(accelArray);
 
     delay(1000);
