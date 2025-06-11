@@ -169,4 +169,5 @@ void calibrate(void)
     avgXAccel /= 100.;
     avgYAccel /= 100.;
     avgZAccel /= 100.;
+    //convert this average into 15.6 mg/LSB
 }
