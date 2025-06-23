@@ -17,8 +17,10 @@ void setup() {
 }
 
 void loop() {
-    int16_t accelArray[3];
+    float accelArray[3];
     getAccel(accelArray);
-
+    Serial.print("X ACCEL: "); Serial.println(accelArray[0]);
+    Serial.print("Y ACCEL: "); Serial.println(accelArray[1]);
+    Serial.print("Z ACCEL: "); Serial.println(accelArray[2]);
     delay(1000);
 }

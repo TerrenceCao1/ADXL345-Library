@@ -87,7 +87,7 @@ uint8_t readRegister(uint8_t reg)
     Output: 
         Output's array 3 big of uint16_t's (arr[0] = x accel, arr[1] = y accel, arr[2] = z accel)
 */
-void getAccel(int16_t accelArray[]) //accelArray is length 3
+void getAccel(float accelArray[]) //accelArray is length 3
 {
     int8_t rawData[6];
     for (int i = 0; i < 6; i++)
@@ -95,17 +95,50 @@ void getAccel(int16_t accelArray[]) //accelArray is length 3
         int8_t buf = readRegister(0x32 + i);
         rawData[i] = buf;
     }
-    //UNTESTED MAKE SURE THIS WORKS BRUH
-    int16_t xAccel = 0x0000;
-    int16_t yAccel = 0x0000;
-    int16_t zAccel = 0x0000;
+    
+    int16_t RawXAccel = 0x0000;
+    int16_t RawYAccel = 0x0000;
+    int16_t RawZAccel = 0x0000;
 
-    xAccel |= (rawData[0]);
-    xAccel |= (rawData[1] << 8);
-    yAccel |= (rawData[2]);
-    yAccel |= (rawData[3] << 8);
-    zAccel |= (rawData[4]);
-    zAccel |= (rawData[5] << 8);
+    RawXAccel |= (rawData[0]);
+    RawXAccel |= (rawData[1] << 8);
+    RawYAccel |= (rawData[2]);
+    RawYAccel |= (rawData[3] << 8);
+    RawZAccel |= (rawData[4]);
+    RawZAccel |= (rawData[5] << 8);
+
+
+    //read the range value (to find the Scale Factor of the data)
+        //0x00 -> 2g mode = 4.3
+        //0x01 -> 4g mode = 8.7
+        //0x02 -> 8g mode = 17.5
+        //0x03 -> 16g mode = 34.5
+
+    float scaleFactor;
+    switch (uint8_t(readRegister(DATA_FORMAT) & 0x03))
+    {
+        case 0x00:
+            scaleFactor = 4.3;
+            break;
+        
+        case 0x01:
+            scaleFactor = 8.7;
+            break;
+        
+        case 0x02:
+            scaleFactor = 17.5;
+            break;
+        
+        case 0x03:
+            scaleFactor = 34.5;
+            break;
+        
+    }
+    //raw accel values are mili-g's / LSB
+    //muliply by 1000 and 10 for m/x^2
+    float xAccel = RawXAccel * scaleFactor / 1000 * 10;
+    float yAccel = RawYAccel * scaleFactor / 1000 * 10;
+    float zAccel = RawZAccel * scaleFactor / 1000 * 10;
 
     accelArray[0] = xAccel;
     accelArray[1] = yAccel;
@@ -158,7 +191,7 @@ void calibrate(void)
     int avgYAccel = 0; 
     int avgZAccel = 0;
 
-    int16_t calibrationValues[3];
+    float calibrationValues[3];
     for (int i = 0; i < 100; i++)
     {
         getAccel(calibrationValues);
@@ -169,5 +202,4 @@ void calibrate(void)
     avgXAccel /= 100.;
     avgYAccel /= 100.;
     avgZAccel /= 100.;
-    //convert this average into 15.6 mg/LSB
 }
