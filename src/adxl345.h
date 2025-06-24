@@ -1,11 +1,15 @@
 #ifndef ADXL345_H_
 #define ADXL345_H_
-
+/*
+REGISTER MAPPINGS
+*/
 #define I2C_ADDRESS 0x53    //i2c device address
 #define DEVID_ADDRESS 0x00  //device id (READ ONLY)
 #define POWER_CTL 0x2D      //power control address (for waking up sensor)
 #define DATA_FORMAT 0x31    //data format address (for setting range of data)
-
+#define OFSX 0x1E           //Offset X
+#define OFSY 0x1F           //Offset Y
+#define OFSZ 0x20           //Offset Z
 /*
     Function: checkForSensor -> read the DEVID register from the sensor, check that it's the right sensor, then proceed with communicating
     Input: void

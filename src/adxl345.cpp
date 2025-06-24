@@ -118,27 +118,28 @@ void getAccel(float accelArray[]) //accelArray is length 3
     switch (uint8_t(readRegister(DATA_FORMAT) & 0x03))
     {
         case 0x00:
-            scaleFactor = 4.3;
+            scaleFactor = 3.9;
             break;
         
         case 0x01:
-            scaleFactor = 8.7;
+            scaleFactor = 7.8;
             break;
         
         case 0x02:
-            scaleFactor = 17.5;
+            scaleFactor = 15.6;
             break;
         
         case 0x03:
-            scaleFactor = 34.5;
+            scaleFactor = 31.2;
             break;
         
     }
+
     //raw accel values are mili-g's / LSB
-    //muliply by 1000 and 10 for m/x^2
-    float xAccel = RawXAccel * scaleFactor / 1000 * 10;
-    float yAccel = RawYAccel * scaleFactor / 1000 * 10;
-    float zAccel = RawZAccel * scaleFactor / 1000 * 10;
+    //muliply by 1000 and 9.81 for m/s^2
+    float xAccel = RawXAccel * scaleFactor / 1000 * 9.8;
+    float yAccel = RawYAccel * scaleFactor / 1000 * 9.8;
+    float zAccel = RawZAccel * scaleFactor / 1000 * 9.8;
 
     accelArray[0] = xAccel;
     accelArray[1] = yAccel;
@@ -184,9 +185,9 @@ void setParams(int val)
     Function: Calibrate - find the offsets of the accelerometer and calibrate it
     Input: void
     Output: void
-*/
-void calibrate(void)
-{
+*/   
+
+void Calibrate(void){
     int avgXAccel = 0; 
     int avgYAccel = 0; 
     int avgZAccel = 0;
@@ -199,7 +200,13 @@ void calibrate(void)
         avgYAccel += calibrationValues[1];
         avgZAccel += calibrationValues[2];
     }
+    //all of these are m/s^2
     avgXAccel /= 100.;
     avgYAccel /= 100.;
     avgZAccel /= 100.;
+
+    //x m/s^2 = 6.54x LSB's (1 LSB = 15.6 milli g's, so do some math)
+    writeRegister(OFSX, (int8_t)(avgXAccel*6.54));
+    writeRegister(OFSY, (int8_t)(avgYAccel*6.54));
+    writeRegister(OFSZ, (int8_t)(avgZAccel*6.54));
 }
