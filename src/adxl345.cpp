@@ -187,10 +187,10 @@ void setParams(int val)
     Output: void
 */   
 
-void Calibrate(void){
-    int avgXAccel = 0; 
-    int avgYAccel = 0; 
-    int avgZAccel = 0;
+void calibrate(void){
+    float avgXAccel = 0; 
+    float avgYAccel = 0; 
+    float avgZAccel = 0;
 
     float calibrationValues[3];
     for (int i = 0; i < 100; i++)
@@ -199,14 +199,26 @@ void Calibrate(void){
         avgXAccel += calibrationValues[0];
         avgYAccel += calibrationValues[1];
         avgZAccel += calibrationValues[2];
+        delay(10);
     }
+    Serial.print("avgXAccel: "); Serial.println(avgXAccel, 3);
+    Serial.print("avgYAccel: "); Serial.println(avgYAccel, 3);
+    Serial.print("avgZAccel: "); Serial.println(avgZAccel, 3);
     //all of these are m/s^2
     avgXAccel /= 100.;
     avgYAccel /= 100.;
     avgZAccel /= 100.;
 
+    delay(3000);
     //x m/s^2 = 6.54x LSB's (1 LSB = 15.6 milli g's, so do some math)
-    writeRegister(OFSX, (int8_t)(avgXAccel*6.54));
-    writeRegister(OFSY, (int8_t)(avgYAccel*6.54));
-    writeRegister(OFSZ, (int8_t)(avgZAccel*6.54));
+    writeRegister(OFSX, (int8_t)(avgXAccel*-6.54));
+    writeRegister(OFSY, (int8_t)(avgYAccel*-6.54));
+    writeRegister(OFSZ, (int8_t)(avgZAccel*-6.54));
+
+    Serial.print("OFSX Reg: "); Serial.println(readRegister(OFSX), HEX);
+    Serial.print("OFSY Reg: "); Serial.println(readRegister(OFSY), HEX);
+    Serial.print("OFSZ Reg: "); Serial.println(readRegister(OFSZ), HEX);
+    delay(3000);
+    
+    Serial.println("Calibrated!");
 }
