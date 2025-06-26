@@ -213,6 +213,17 @@ void calibrate(void){
 
     delay(1000);
     //x m/s^2 = 6.54x LSB's (1 LSB = 15.6 milli g's, so do some math)
+    int8_t offsetRegValues[3] = {avgXAccel * -6.54, avgYAccel * -6.54, avgZAccel * -6.54}; 
+
+    //processing the offsets - if they're too small, just make them 0 lmao
+    for (int i = 0; i < 3; i++)
+    {
+        if (offsetRegValues[i] < 0.5)
+        {
+            offsetRegValues[i] = 0;
+        }
+    }
+
     //THERES A FAT BUG THAT MAKES IT OVERFLOW -> small negative number + positive OFSZ -> zAccel > 256 and therefore overflows
     writeRegister(OFSX, (int8_t)round(avgXAccel*-6.54));
     writeRegister(OFSY, (int8_t)round(avgYAccel*-6.54));
