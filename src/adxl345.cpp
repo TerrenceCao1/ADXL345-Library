@@ -225,9 +225,9 @@ void calibrate(void){
     }
 
     //THERES A FAT BUG THAT MAKES IT OVERFLOW -> small negative number + positive OFSZ -> zAccel > 256 and therefore overflows
-    writeRegister(OFSX, (int8_t)round(avgXAccel*-6.54));
-    writeRegister(OFSY, (int8_t)round(avgYAccel*-6.54));
-    writeRegister(OFSZ, (int8_t)round(avgZAccel*-6.54));
+    writeRegister(OFSX, offsetRegValues[0]);
+    writeRegister(OFSY, offsetRegValues[1]);
+    writeRegister(OFSZ, offsetRegValues[2]);
 
     Serial.print("OFSX Reg: "); Serial.println(readRegister(OFSX), HEX);
     Serial.print("OFSY Reg: "); Serial.println(readRegister(OFSY), HEX);
