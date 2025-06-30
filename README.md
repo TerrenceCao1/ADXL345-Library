@@ -1,3 +1,5 @@
+### ADXL345 Accelerometer Driver!
+
 Hello!
 
 This is a sensor driver designed for the Arduino Ecosystem. It's tested on the atmega328 (which is the chip on the Uno and the Nano) and ESP32. 
