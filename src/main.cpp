@@ -3,6 +3,7 @@
 #include <Wire.h>
 
 
+float calArray[3];
 void setup() {
     Serial.begin(9600);
     Wire.begin();
@@ -14,12 +15,13 @@ void setup() {
     
     turnOn();
     setParams(2); //change to 2, 4, 8, 16 based on prefered range  
-    calibrate();
+
+    calibrate(calArray);
 }
 
 void loop() {
-    float accelArray[3];
-    getAccel(accelArray);
+    float accelArray[3]; //getAccel function gets an array and fills it with current acceleration data 
+    getAccel(accelArray, calArray); //in m/s^2
     Serial.print("X ACCEL: "); Serial.print(accelArray[0]);
     Serial.print(" Y ACCEL: "); Serial.print(accelArray[1]);
     Serial.print(" Z ACCEL: "); Serial.println(accelArray[2]);

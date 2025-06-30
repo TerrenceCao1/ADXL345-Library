@@ -58,13 +58,13 @@ uint8_t readRegister(uint8_t reg);
     Output: 
         Output's array 3 big of uint16_t's (arr[0] = x accel, arr[1] = y accel, arr[2] = z accel)
 */
-void getAccel(float accelArray[]);
+void getAccel(float accelArray[], float calArray[]);
 
 /*
     Function: Calibrate - find the offsets of the accelerometer and calibrate it
     Input: void
     Output: void
 */
-void calibrate(void);
+void calibrate(float calibrationArray[]);
 
 #endif

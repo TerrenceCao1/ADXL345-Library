@@ -87,7 +87,7 @@ uint8_t readRegister(uint8_t reg)
     Output: 
         Output's array 3 big of uint16_t's (arr[0] = x accel, arr[1] = y accel, arr[2] = z accel)
 */
-void getAccel(float accelArray[]) //accelArray is length 3
+void getAccel(float accelArray[], float calArray[]) //accelArray is length 3
 {
     int8_t rawData[6];
     for (int i = 0; i < 6; i++)
@@ -141,9 +141,9 @@ void getAccel(float accelArray[]) //accelArray is length 3
     float yAccel = RawYAccel * scaleFactor / 1000 * 9.8;
     float zAccel = RawZAccel * scaleFactor / 1000 * 9.8;
 
-    accelArray[0] = xAccel;
-    accelArray[1] = yAccel;
-    accelArray[2] = zAccel;
+    accelArray[0] = xAccel - calArray[0];
+    accelArray[1] = yAccel - calArray[1];
+    accelArray[2] = zAccel - calArray[2];
 }
 
 /*
@@ -183,56 +183,30 @@ void setParams(int val)
 
 /*
     Function: Calibrate - find the offsets of the accelerometer and calibrate it
-    Input: void
-    Output: void
+    Input: 
+        calibrationArray to be filled w average acceleration values
+    Output: 
+        calibrationArray filled with average x,y,z accelerations
 */   
 
-void calibrate(void){
+void calibrate(float calibrationArray[]){
     float avgXAccel = 0; 
     float avgYAccel = 0; 
     float avgZAccel = 0;
 
     float calibrationValues[3];
+    float zeroArray[3] = {0, 0, 0};
     for (int i = 0; i < 100; i++)
     {
-        getAccel(calibrationValues);
+        getAccel(calibrationValues, zeroArray);
         avgXAccel += calibrationValues[0];
         avgYAccel += calibrationValues[1];
         avgZAccel += calibrationValues[2];
         delay(10);
-        Serial.println(calibrationValues[2]);
     }
 
     //all of these are m/s^2
-    avgXAccel /= 100.;
-    avgYAccel /= 100.;
-    avgZAccel /= 100.;
-    Serial.print("avgXAccel: "); Serial.println(avgXAccel, 3);
-    Serial.print("avgYAccel: "); Serial.println(avgYAccel, 3);
-    Serial.print("avgZAccel: "); Serial.println(avgZAccel, 3);
-
-    delay(1000);
-    //x m/s^2 = 6.54x LSB's (1 LSB = 15.6 milli g's, so do some math)
-    int8_t offsetRegValues[3] = {avgXAccel * -6.54, avgYAccel * -6.54, avgZAccel * -6.54}; 
-
-    //processing the offsets - if they're too small, just make them 0 lmao
-    for (int i = 0; i < 3; i++)
-    {
-        if (offsetRegValues[i] < 0.5)
-        {
-            offsetRegValues[i] = 0;
-        }
-    }
-
-    //THERES A FAT BUG THAT MAKES IT OVERFLOW -> small negative number + positive OFSZ -> zAccel > 256 and therefore overflows
-    writeRegister(OFSX, offsetRegValues[0]);
-    writeRegister(OFSY, offsetRegValues[1]);
-    writeRegister(OFSZ, offsetRegValues[2]);
-
-    Serial.print("OFSX Reg: "); Serial.println(readRegister(OFSX), HEX);
-    Serial.print("OFSY Reg: "); Serial.println(readRegister(OFSY), HEX);
-    Serial.print("OFSZ Reg: "); Serial.println(readRegister(OFSZ), HEX);
-    delay(1000);
-    
-    Serial.println("Calibrated!");
+    calibrationArray[0] = avgXAccel /= 100.;
+    calibrationArray[1] = avgYAccel /= 100.;
+    calibrationArray[2] = avgZAccel /= 100.;
 }
